@@ -1,0 +1,115 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc} % For UTF-8 encoding
+\usepackage[greek]{babel} % For Greek language support
+\usepackage{fontspec}
+\usepackage[margin=1in]{geometry} % Adjust margins here
+\usepackage{graphicx}
+
+\setmainfont{Times New Roman}
+
+\newcommand{\articles}[7]{
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{llcc}
+            \toprule
+                &        & singular & plural \\
+                & gender &          &        \\
+            \midrule
+            \multirow{3}{*}{\rotatebox{90}{#1.}}
+                & mas.    & #2        & #5 \\
+                & fem.    & #3        & #6 \\
+                & neu.    & #4        & #7 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+}
+
+\newcommand{\pronouns}[11]{
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{llcc}
+            \toprule
+                &        & singular & plural \\
+                & person &          &        \\
+            \midrule
+            \multirow{3}{*}{\rotatebox{90}{#1.}}
+                & I      & #2        & #7 \\
+                & you    & #3        & #8 \\
+                & he     & #4        & #9 \\
+                & she    & #5        & #10 \\
+                & it     & #6        & #11 \\
+
+            \bottomrule
+        \end{tabular}
+    \end{table}
+}
+
+\begin{document}
+
+\articles{nom}{ο}   {η}   {το}  {ιο}  {ιο}  {τα}
+\articles{acc}{τον} {την} {το}  {τους}{τις} {τα}
+\articles{gen}{του} {της} {του} {των} {των} {των}
+\pronouns{nom}{εγώ}{εσύ}{αυτός}{αυτή}{αυτό}{εμείς}{εσείς}{αυτοί}{αυτές}{αυτά}
+
+% \begin{table}[h]
+% \centering
+% \begin{tabular}{lccc}
+% \toprule
+%     Case       & Masculine & Feminine & Neuter \\
+% \midrule
+% \multicolumn{4}{c}{\textbf{Singular}}\\
+% \midrule
+%     Nominative & ο         & η        & το  \\
+%     Accusative & τον       & την      & το  \\
+%     Genitive   & του       & της      & του \\
+% \midrule
+% \multicolumn{4}{c}{\textbf{Plural}} \\
+% \midrule
+%     Nominative & οι        & οι       & τα  \\
+%     Accusative & τους      & τις      & τα  \\
+%     Genitive   & των       & των      & των \\
+% \bottomrule
+% \end{tabular}
+% \caption{Greek Articles in Nominative, Accusative, and Genitive Cases}
+% \end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lp{10cm}}
+\toprule
+\textbf{Case} & \textbf{Primary Uses} \\
+\midrule
+\textbf{Nominative} &
+    \begin{itemize}
+        \item Subject of a verb (e.g., \textit{Ο άντρας τρέχει.} - The man runs.)
+        \item Predicate nominative (e.g., \textit{Αυτός είναι ο δάσκαλος.} - He is the teacher.)
+    \end{itemize} \\
+\midrule
+\textbf{Accusative} &
+    \begin{itemize}
+        \item Direct object of a verb (e.g., \textit{Βλέπω τον σκύλο.} - I see the dog.)
+        \item With certain prepositions (e.g., \textit{Πάω στην πόλη.} - I go to the city.)
+        \item Time expressions (e.g., \textit{Έμεινα την νύχτα.} - I stayed the night.)
+    \end{itemize} \\
+\midrule
+\textbf{Genitive} &
+    \begin{itemize}
+        \item Possession (e.g., \textit{Το βιβλίο του Γιάννη.} - The book of John.)
+        \item Origin or source (e.g., \textit{Τα προϊόντα της Ελλάδας.} - The products of Greece.)
+        \item Partitive genitive (e.g., \textit{Ένα κομμάτι του κέικ.} - A piece of the cake.)
+        \item With certain verbs and prepositions.
+        \item Description.
+    \end{itemize} \\
+\midrule
+\textbf{Vocative} &
+    \begin{itemize}
+        \item Direct address (e.g., \textit{Γιάννη, έλα εδώ!} - John, come here!; \textit{Κύριε, μπορείτε να με βοηθήσετε;} - Sir, can you help me?)
+    \end{itemize} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\end{document}
