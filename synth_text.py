@@ -8,6 +8,7 @@ from google.cloud.texttospeech_v1 import SynthesizeSpeechResponse
 
 
 ANKI_MEDIA_LOCATION = "/Users/jeff/Library/Application Support/Anki2/User 1/collection.media"
+ANKI_MEDIA_LOCATION = "/Users/jeffor/Library/Application Support/Anki2/User 1/collection.media"
 
 word_match = re.compile(r"(?P<name>[\w\s]+)\[")
 # something wrong with treesitter? causing weird indentation.  the following line resets it to normal
