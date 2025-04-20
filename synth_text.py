@@ -1,10 +1,23 @@
 """Synthesizes speech from the input string of text."""
 import os
-import csv
+import os.path
 import re
 import sys
 from google.cloud import texttospeech
 from google.cloud.texttospeech_v1 import SynthesizeSpeechResponse
+from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
+from google_auth_httplib2 import AuthorizedHttp
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+
+# If modifying these scopes, delete the file token.json.
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+
+# The ID of your spreadsheet.
+SPREADSHEET_ID = '1p39Sbnkx3G4swoSPJ2KKVKu-VwteKmaAQ9toFadd5cA'  # Replace with your spreadsheet ID
+RANGE_NAME = 'Anki!A:Z'  # Replace with the desired sheet name and range
+CERTS_JSON = '/Users/jeffor/Documents/lexilogio/bunes-282905-6d657cd60a3d.json'
 
 
 ANKI_MEDIA_LOCATION = "/Users/jeff/Library/Application Support/Anki2/User 1/collection.media"
@@ -13,6 +26,54 @@ ANKI_MEDIA_LOCATION = "/Users/jeffor/Library/Application Support/Anki2/User 1/co
 word_match = re.compile(r"(?P<name>[\w\s]+)\[")
 # something wrong with treesitter? causing weird indentation.  the following line resets it to normal
 _ = re.compile(r"\]")
+
+
+def get_sheet_values() -> list[list[str]] | None:
+    """Shows basic usage of the Sheets API.
+    Prints values from a sample spreadsheet.
+    """
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.json'):
+        # This part is more relevant for user-based authentication.
+        # For service accounts, we'll directly use the credentials file.
+        pass
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            # Use the service account key file
+            creds = Credentials.from_service_account_file(
+                './bunes-282905-6d657cd60a3d.json', scopes=SCOPES) # Replace with the path to your JSON file
+
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        # Call the Sheets API
+        result = service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID,
+            range=RANGE_NAME
+        ).execute()
+        values = result.get('values', [])
+
+        if not values:
+            print('No data found.')
+            return
+
+        print('Data:')
+        for row in values:
+            # Print columns A and E, which correspond to indices 0 and 4.
+            print(row)
+            # You can access individual cells like this: row[0], row[1], etc.
+        return values
+
+    except HttpError as err:
+        print(f'An error occurred: {err}')
+        return None
+
 
 class Synthesize:
 
@@ -59,25 +120,23 @@ def extract_word(line: list[str]) -> str | None:
 
 if __name__ == "__main__":
 
-    filename = sys.argv[1]
-    print(filename)
-
     synth = Synthesize()
+    reader = get_sheet_values()
+    if not reader:
+        print("Could not get Anki sheet from cloud")
+        sys.exit(1)
 
-    with open(filename, 'r') as f:
-        reader = csv.reader(f, delimiter="\t")
-        for line in reader:
+    for line in reader:
+        # ignore meta lines
+        if line[0][0] == '#':
+            continue
 
-            # ignore meta lines
-            if line[0][0] == '#':
-                continue
+        word = extract_word(line)
+        if word and media_exists(word):
+            print(f"** {word}")
+            continue
+        elif word is None:
+            print(f"!! {word}")
+            continue
 
-            word = extract_word(line)
-            if word and media_exists(word):
-                print(f"** {word}")
-                continue
-            elif word is None:
-                print(f"!! {word}")
-                continue
-
-            synth.text(word)
+        synth.text(word)
